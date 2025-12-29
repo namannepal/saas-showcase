@@ -59,8 +59,8 @@ export async function generateScreenshotUrl(
     .timeout(timeout)
     .metadataFonts(true);
 
-  // Generate signed URL (valid for 1 hour)
-  const signedUrl = client.generateSignedTakeURL(screenshotOptions, 3600);
+  // Generate signed URL
+  const signedUrl = client.generateSignedTakeURL(screenshotOptions);
 
   return signedUrl;
 }
