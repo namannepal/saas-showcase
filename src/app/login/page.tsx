@@ -25,11 +25,12 @@ export default function LoginPage() {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         const redirectTo = searchParams.get('redirectTo') || '/admin';
-        router.push(redirectTo);
+        console.log('Already logged in, redirecting to:', redirectTo);
+        window.location.href = redirectTo;
       }
     };
     checkUser();
-  }, [router, searchParams]);
+  }, [searchParams]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,10 +57,11 @@ export default function LoginPage() {
         // Get redirect URL from query params or default to /admin
         const redirectTo = searchParams.get('redirectTo') || '/admin';
         
-        // Small delay to show success message
+        console.log('Redirecting to:', redirectTo);
+        
+        // Use window.location for full page reload (better for auth)
         setTimeout(() => {
-          router.push(redirectTo);
-          router.refresh();
+          window.location.href = redirectTo;
         }, 500);
       }
     } catch (error: any) {
