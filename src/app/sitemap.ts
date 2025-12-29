@@ -14,7 +14,7 @@ const PAGE_TYPES = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   // Fetch all SaaS products
   const { data: saasProducts } = await supabase
