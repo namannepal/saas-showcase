@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { sampleSaaS } from '@/data/sampleData';
+import { supabase } from '@/lib/supabase';
 import type { Category } from '@/types';
 
 const categories: Category[] = [
@@ -19,10 +19,15 @@ const categories: Category[] = [
 // GET /api/categories - Get all categories with counts
 export async function GET() {
   try {
+    // Fetch all SaaS products from Supabase
+    const { data: saasProducts } = await supabase
+      .from('saas_products')
+      .select('category');
+
     // Count SaaS products per category
     const categoriesWithCounts = categories.map(category => ({
       name: category,
-      count: sampleSaaS.filter(s => s.category === category).length,
+      count: saasProducts?.filter(s => s.category === category).length || 0,
     }));
 
     return NextResponse.json({

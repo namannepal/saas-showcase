@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { samplePages } from '@/data/sampleData';
+import { supabase } from '@/lib/supabase';
 
 // GET /api/pages/[id] - Get a single page by ID
 export async function GET(
@@ -8,7 +8,11 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const page = samplePages.find(p => p.id === id);
+    const { data: page } = await supabase
+      .from('showcase_pages')
+      .select('*')
+      .eq('id', id)
+      .single();
 
     if (!page) {
       return NextResponse.json(
@@ -35,7 +39,7 @@ export async function GET(
   }
 }
 
-// PUT /api/pages/[id] - Update a page (for future database integration)
+// PUT /api/pages/[id] - Update a page
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -44,11 +48,18 @@ export async function PUT(
     const { id } = await params;
     const body = await request.json();
 
-    // In a real app, this would update the database
-    // For now, just return success with the updated data
+    const { data, error } = await supabase
+      .from('showcase_pages')
+      .update(body)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+
     return NextResponse.json({
       success: true,
-      data: { id, ...body },
+      data,
       message: 'Page updated successfully',
     });
   } catch (error) {
@@ -62,7 +73,7 @@ export async function PUT(
   }
 }
 
-// DELETE /api/pages/[id] - Delete a page (for future database integration)
+// DELETE /api/pages/[id] - Delete a page
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -70,8 +81,13 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    // In a real app, this would delete from the database
-    // For now, just return success
+    const { error } = await supabase
+      .from('showcase_pages')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+
     return NextResponse.json({
       success: true,
       message: 'Page deleted successfully',
