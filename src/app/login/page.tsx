@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,17 +10,34 @@ import { Loader2 } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
 
+  useEffect(() => {
+    // Check if already logged in
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const redirectTo = searchParams.get('redirectTo') || '/admin';
+        router.push(redirectTo);
+      }
+    };
+    checkUser();
+  }, [router, searchParams]);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccess('');
+
+    console.log('Attempting login with:', formData.email);
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -28,11 +45,22 @@ export default function LoginPage() {
         password: formData.password,
       });
 
+      console.log('Login response:', { data, error });
+
       if (error) throw error;
 
       if (data.user) {
-        router.push('/admin');
-        router.refresh();
+        console.log('Login successful! User:', data.user.email);
+        setSuccess('Login successful! Redirecting...');
+        
+        // Get redirect URL from query params or default to /admin
+        const redirectTo = searchParams.get('redirectTo') || '/admin';
+        
+        // Small delay to show success message
+        setTimeout(() => {
+          router.push(redirectTo);
+          router.refresh();
+        }, 500);
       }
     } catch (error: any) {
       console.error('Login error:', error);
@@ -64,6 +92,12 @@ export default function LoginPage() {
               {error && (
                 <div className="p-3 rounded-md bg-red-500/10 border border-red-500/20 text-red-500 text-sm">
                   {error}
+                </div>
+              )}
+              
+              {success && (
+                <div className="p-3 rounded-md bg-green-500/10 border border-green-500/20 text-green-500 text-sm">
+                  {success}
                 </div>
               )}
 
