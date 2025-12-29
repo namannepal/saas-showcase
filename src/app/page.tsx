@@ -6,10 +6,10 @@ import Link from 'next/link';
 export const revalidate = 0; // Always fetch fresh data
 
 export default async function Home() {
-  // Fetch recent showcase pages from Supabase
-  const { data: featuredPages } = await supabase
-    .from('showcase_pages')
-    .select('*, saas_products(*)')
+  // Fetch SaaS products from Supabase
+  const { data: saasProducts } = await supabase
+    .from('saas_products')
+    .select('*')
     .order('created_at', { ascending: false })
     .limit(12);
 
@@ -33,31 +33,53 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Featured Pages Section */}
+      {/* Featured SaaS Products Section */}
       <section className="mb-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredPages && featuredPages.length > 0 ? (
-            featuredPages.map((page: any) => (
-              <ShowcaseCard
-                key={page.id}
-                page={{
-                  id: page.id,
-                  saasId: page.saas_id,
-                  slug: page.slug,
-                  title: page.title,
-                  description: page.description,
-                  pageUrl: page.page_url,
-                  screenshotUrl: page.screenshot_url,
-                  pageType: page.page_type,
-                  tags: page.tags,
-                  createdAt: page.created_at,
-                }}
-                saasName={page.saas_products?.name}
-              />
+          {saasProducts && saasProducts.length > 0 ? (
+            saasProducts.map((saas: any) => (
+              <Link
+                key={saas.id}
+                href={`/saas/${saas.id}`}
+                className="block group"
+              >
+                <div className="overflow-hidden rounded-sm">
+                  {/* Image - 380x475px aspect ratio */}
+                  <div 
+                    className="relative overflow-hidden bg-muted"
+                    style={{ aspectRatio: '380/475' }}
+                  >
+                    {saas.image_url && (
+                      <img
+                        src={saas.image_url}
+                        alt={saas.name}
+                        className="w-full h-full object-cover object-top"
+                        loading="lazy"
+                      />
+                    )}
+                    
+                    {/* Link icon on hover - top right */}
+                    <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <div className="bg-white/90 backdrop-blur-sm rounded-sm p-2 shadow-lg">
+                        <svg className="size-4 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Name below image */}
+                  <div className="mt-3">
+                    <h3 className="text-sm font-medium text-foreground">
+                      {saas.name}
+                    </h3>
+                  </div>
+                </div>
+              </Link>
             ))
           ) : (
             <p className="text-muted-foreground col-span-3 text-center py-8">
-              No pages yet. Add some through the API!
+              No SaaS products yet. Add some through the admin!
             </p>
           )}
         </div>
