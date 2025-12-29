@@ -165,13 +165,26 @@ export default async function ShowcasePageDetail({ params }: PageProps) {
                           // Remove "Variable" suffix (e.g., "interVariable" -> "inter")
                           name = name.replace(/Variable$/i, '');
                           
+                          // Remove file format extensions (e.g., "Inter Woff2" -> "Inter")
+                          name = name.replace(/\s+(woff2?|ttf|otf|eot|svg)$/gi, '');
+                          
                           // Remove numeric font weights (e.g., "Lausanne 400" -> "Lausanne")
                           name = name.replace(/\s+\d{3,4}$/g, '');
+                          
+                          // Remove standalone numbers that aren't part of font name (e.g., "26" in "P 22 Mackinacpro 26")
+                          // But preserve numbers that are part of the font name (e.g., "P22", "Helvetica Neue 55")
+                          name = name.replace(/\s+\d{1,3}(?=\s|$)/g, '');
                           
                           // Remove font weight/style keywords
                           name = name
                             .replace(/\s+(trial|medium|bold|regular|light|thin|black|heavy|extra|semibold|demi)\b/gi, '')
                             .trim();
+                          
+                          // Fix spacing issues: "P 22" -> "P22"
+                          name = name.replace(/^P\s+(\d+)/i, 'P$1');
+                          
+                          // Fix common font name spacing: "Mackinacpro" -> "Mackinac Pro"
+                          name = name.replace(/([a-z])([A-Z])/g, '$1 $2');
                           
                           // Capitalize first letter of each word, but preserve short acronyms
                           return name.split(' ').map(word => {
