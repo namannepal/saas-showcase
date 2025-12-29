@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Insert into Supabase
-    const { data, error } = await supabase
+    const { data: saasData, error: saasError } = await supabase
       .from('saas_products')
       .insert([
         {
@@ -121,15 +121,39 @@ export async function POST(request: NextRequest) {
       .select()
       .single();
 
-    if (error) {
-      throw error;
+    if (saasError) {
+      throw saasError;
+    }
+
+    // Also create a showcase page for the landing page
+    const { data: pageData, error: pageError } = await supabase
+      .from('showcase_pages')
+      .insert([
+        {
+          saas_id: saasData.id,
+          title: `${body.name} Landing Page`,
+          description: body.description,
+          page_url: body.url,
+          screenshot_url: imageUrl,
+          page_type: 'landing',
+          tags: body.tags || [],
+          metadata: metadata,
+        },
+      ])
+      .select()
+      .single();
+
+    if (pageError) {
+      console.error('Failed to create showcase page:', pageError);
+      // Don't fail the whole request, just log it
     }
 
     return NextResponse.json(
       {
         success: true,
-        data,
-        message: 'SaaS product created successfully',
+        data: saasData,
+        showcasePage: pageData,
+        message: 'SaaS product and showcase page created successfully',
         screenshotCaptured: !!imageUrl,
       },
       { status: 201 }
