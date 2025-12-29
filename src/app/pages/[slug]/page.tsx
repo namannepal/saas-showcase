@@ -159,15 +159,23 @@ export default async function ShowcasePageDetail({ params }: PageProps) {
                             }
                           }
                           
+                          // Remove "Variable" suffix (e.g., "interVariable" -> "inter")
+                          name = name.replace(/Variable$/i, '');
+                          
                           // Remove font weight/style keywords
                           name = name
-                            .replace(/\s+(trial|medium|variable|bold|regular|light|thin|black|heavy|extra|semibold|demi)\b/gi, '')
+                            .replace(/\s+(trial|medium|bold|regular|light|thin|black|heavy|extra|semibold|demi)\b/gi, '')
                             .trim();
                           
-                          // Capitalize first letter of each word
-                          return name.split(' ').map(word => 
-                            word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                          ).join(' ');
+                          // Capitalize first letter of each word, but preserve short acronyms
+                          return name.split(' ').map(word => {
+                            // If word is 2-3 chars and all letters, treat as acronym (e.g., VC, IBM, HP)
+                            if (word.length >= 2 && word.length <= 3 && /^[a-zA-Z]+$/.test(word)) {
+                              return word.toUpperCase();
+                            }
+                            // Otherwise, capitalize first letter
+                            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+                          }).join(' ');
                         })
                         .filter(Boolean)
                     )];
