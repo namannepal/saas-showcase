@@ -33,6 +33,7 @@ const pageTypes = [
   { value: 'testimonials', label: 'Testimonials Page' },
   { value: 'faq', label: 'FAQ Page' },
   { value: 'contact', label: 'Contact Us Page' },
+  { value: 'comparison', label: 'Comparison Page' },
 ];
 
 export default function AddSaaSPage() {

@@ -68,3 +68,4 @@ CREATE TRIGGER trigger_set_saas_slug
 -- Verify results
 SELECT id, name, slug FROM saas_products ORDER BY created_at DESC;
 
+

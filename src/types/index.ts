@@ -19,7 +19,7 @@ export interface ShowcasePage {
   description: string;
   pageUrl: string;
   screenshotUrl: string;
-  pageType: 'landing' | 'pricing' | 'features' | 'about' | 'dashboard' | 'other';
+  pageType: 'landing' | 'pricing' | 'features' | 'about' | 'dashboard' | 'comparison' | 'other';
   tags: string[];
   createdAt: string;
   metadata?: ScreenshotMetadata;

@@ -18,6 +18,7 @@ const PAGE_TYPE_MAP: Record<string, string> = {
   'testimonials-pages': 'testimonials',
   'faq-pages': 'faq',
   'contact-pages': 'contact',
+  'comparison-pages': 'comparison',
 };
 
 const PAGE_TYPE_LABELS: Record<string, string> = {
@@ -29,6 +30,7 @@ const PAGE_TYPE_LABELS: Record<string, string> = {
   'testimonials': 'Testimonials Pages',
   'faq': 'FAQ Pages',
   'contact': 'Contact Us Pages',
+  'comparison': 'Comparison Pages',
 };
 
 export const revalidate = 0; // Always fetch fresh data

@@ -21,3 +21,4 @@ WHERE page_type IS NULL;
 -- Verify
 SELECT name, page_type FROM saas_products ORDER BY created_at DESC;
 
+

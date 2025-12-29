@@ -26,3 +26,4 @@ LEFT JOIN showcase_pages p ON p.saas_id = sp.id
 GROUP BY sp.id, sp.name
 ORDER BY sp.created_at DESC;
 
+
