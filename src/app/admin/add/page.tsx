@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { AuthCheck } from '@/components/admin/AuthCheck';
 import Link from 'next/link';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 
@@ -71,7 +72,8 @@ export default function AddSaaSPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <AuthCheck>
+      <div className="container mx-auto px-4 py-12">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -225,6 +227,7 @@ export default function AddSaaSPage() {
         </Card>
       </div>
     </div>
+    </AuthCheck>
   );
 }
 

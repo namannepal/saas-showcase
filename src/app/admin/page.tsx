@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LogoutButton } from '@/components/admin/LogoutButton';
+import { AuthCheck } from '@/components/admin/AuthCheck';
 import Link from 'next/link';
 import { Trash2, Edit, Plus } from 'lucide-react';
 
@@ -22,7 +23,8 @@ export default async function AdminPage() {
     .order('created_at', { ascending: false });
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <AuthCheck>
+      <div className="container mx-auto px-4 py-12">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
@@ -156,6 +158,7 @@ export default async function AdminPage() {
         </Card>
       </div>
     </div>
+    </AuthCheck>
   );
 }
 
