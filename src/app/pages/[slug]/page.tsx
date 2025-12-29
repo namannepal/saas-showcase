@@ -135,16 +135,35 @@ export default async function ShowcasePageDetail({ params }: PageProps) {
                   {/* Fonts */}
                   {(() => {
                     const fonts = saas.metadata?.fonts || [];
-                    const genericFonts = ['sans-serif', 'serif', 'monospace', 'cursive', 'fantasy', 'system-ui'];
+                    const genericFonts = ['sans-serif', 'serif', 'monospace', 'cursive', 'fantasy', 'system-ui', 'ui-monospace'];
                     const uniqueFonts = [...new Set(
                       fonts
                         .map((f: any) => f.first)
                         .filter((name: string) => !genericFonts.includes(name?.toLowerCase()))
-                        .map((name: string) => 
-                          name
-                            ?.replace(/\s+(trial|medium|variable|bold|regular|light|thin|black|heavy|extra|semibold|demi)\b/gi, '')
-                            .trim()
-                        )
+                        .map((name: string) => {
+                          if (!name) return '';
+                          
+                          // Handle Next.js font format: __fontname_hash
+                          // Example: __saans_cd5095 -> saans
+                          if (name.startsWith('__')) {
+                            // Remove the __ prefix and everything after the first underscore
+                            name = name.substring(2); // Remove __
+                            const underscoreIndex = name.indexOf('_');
+                            if (underscoreIndex > 0) {
+                              name = name.substring(0, underscoreIndex);
+                            }
+                          }
+                          
+                          // Remove font weight/style keywords
+                          name = name
+                            .replace(/\s+(trial|medium|variable|bold|regular|light|thin|black|heavy|extra|semibold|demi)\b/gi, '')
+                            .trim();
+                          
+                          // Capitalize first letter of each word
+                          return name.split(' ').map(word => 
+                            word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                          ).join(' ');
+                        })
                         .filter(Boolean)
                     )];
                     
