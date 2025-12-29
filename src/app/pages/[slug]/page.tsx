@@ -168,26 +168,31 @@ export default async function ShowcasePageDetail({ params }: PageProps) {
                           // Remove file format extensions (e.g., "Inter Woff2" -> "Inter")
                           name = name.replace(/\s+(woff2?|ttf|otf|eot|svg)$/gi, '');
                           
-                          // Remove numeric font weights (e.g., "Lausanne 400" -> "Lausanne")
-                          name = name.replace(/\s+\d{3,4}$/g, '');
+                          // Fix spacing issues FIRST: "P 22" -> "P22" (before removing numbers)
+                          name = name.replace(/^P\s+(\d+)/i, 'P$1');
                           
-                          // Remove standalone numbers that aren't part of font name (e.g., "26" in "P 22 Mackinacpro 26")
-                          // But preserve numbers that are part of the font name (e.g., "P22", "Helvetica Neue 55")
-                          name = name.replace(/\s+\d{1,3}(?=\s|$)/g, '');
+                          // Remove numeric font weights at the end FIRST (e.g., "Lausanne 400" -> "Lausanne")
+                          name = name.replace(/\s+\d{2,4}$/g, '');
+                          
+                          // Separate common font family suffixes: "Mackinacpro" -> "Mackinac Pro"
+                          name = name.replace(/(pro|mono|sans|serif|display|text|condensed|extended|narrow|wide)$/i, ' $1');
+                          
+                          // Fix common font name spacing for camelCase: "InterBold" -> "Inter Bold"
+                          name = name.replace(/([a-z])([A-Z])/g, '$1 $2');
                           
                           // Remove font weight/style keywords
                           name = name
                             .replace(/\s+(trial|medium|bold|regular|light|thin|black|heavy|extra|semibold|demi)\b/gi, '')
                             .trim();
                           
-                          // Fix spacing issues: "P 22" -> "P22"
-                          name = name.replace(/^P\s+(\d+)/i, 'P$1');
-                          
-                          // Fix common font name spacing: "Mackinacpro" -> "Mackinac Pro"
-                          name = name.replace(/([a-z])([A-Z])/g, '$1 $2');
-                          
                           // Capitalize first letter of each word, but preserve short acronyms
                           return name.split(' ').map(word => {
+                            const lowerWord = word.toLowerCase();
+                            // Common font suffixes should NOT be treated as acronyms
+                            const fontSuffixes = ['pro', 'neo', 'alt', 'jet', 'new', 'old', 'std', 'web'];
+                            if (fontSuffixes.includes(lowerWord)) {
+                              return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+                            }
                             // If word is 2-3 chars and all letters, treat as acronym (e.g., VC, IBM, HP)
                             if (word.length >= 2 && word.length <= 3 && /^[a-zA-Z]+$/.test(word)) {
                               return word.toUpperCase();
