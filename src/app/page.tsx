@@ -40,7 +40,7 @@ export default async function Home() {
             saasProducts.map((saas: any) => (
               <Link
                 key={saas.id}
-                href={`/saas/${saas.id}`}
+                href={`/pages/${saas.slug}`}
                 className="block group"
               >
                 <div className="overflow-hidden rounded-sm">

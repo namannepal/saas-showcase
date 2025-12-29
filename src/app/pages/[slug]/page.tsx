@@ -17,59 +17,47 @@ export const revalidate = 60; // Revalidate every 60 seconds
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
-  const { data: page } = await supabase
-    .from('showcase_pages')
+  const { data: saas } = await supabase
+    .from('saas_products')
     .select('*')
     .eq('slug', slug)
     .single();
   
-  if (!page) {
+  if (!saas) {
     return {
       title: 'Page Not Found',
     };
   }
 
   return {
-    title: `${page.title} - SaaS Showcase`,
-    description: page.description,
+    title: `${saas.name} - SaaS Showcase`,
+    description: saas.description,
   };
 }
 
 export default async function ShowcasePageDetail({ params }: PageProps) {
   const { slug } = await params;
   
-  // Fetch showcase page with SaaS product
-  const { data: page } = await supabase
-    .from('showcase_pages')
-    .select('*, saas_products(*)')
+  // Fetch SaaS product
+  const { data: saas } = await supabase
+    .from('saas_products')
+    .select('*')
     .eq('slug', slug)
     .single();
 
-  if (!page) {
+  if (!saas) {
     notFound();
   }
 
-  const saas = page.saas_products;
-
-  // Get other pages from the same SaaS
-  const { data: relatedPagesData } = await supabase
-    .from('showcase_pages')
+  // Get similar SaaS products (same category)
+  const { data: similarSaasData } = await supabase
+    .from('saas_products')
     .select('*')
-    .eq('saas_id', page.saas_id)
-    .neq('slug', slug)
-    .limit(3);
-  
-  const relatedPages = relatedPagesData || [];
-
-  // Get similar pages (same type)
-  const { data: similarPagesData } = await supabase
-    .from('showcase_pages')
-    .select('*, saas_products(*)')
-    .eq('page_type', page.page_type)
+    .eq('category', saas.category)
     .neq('slug', slug)
     .limit(3);
     
-  const similarPages = similarPagesData || [];
+  const similarSaas = similarSaasData || [];
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -85,18 +73,7 @@ export default async function ShowcasePageDetail({ params }: PageProps) {
               Browse
             </Link>
             <span>/</span>
-            {saas && (
-              <>
-                <Link 
-                  href={`/saas/${saas.id}`}
-                  className="hover:text-foreground transition-colors"
-                >
-                  {saas.name}
-                </Link>
-                <span>/</span>
-              </>
-            )}
-            <span className="text-foreground">{page.title}</span>
+            <span className="text-foreground">{saas.name}</span>
           </nav>
         </div>
 
@@ -106,59 +83,63 @@ export default async function ShowcasePageDetail({ params }: PageProps) {
           <div className="lg:col-span-5">
             {/* Screenshot */}
             <div>
-              <img
-                src={page.screenshot_url}
-                alt={page.title}
-                className="w-full rounded-sm"
-                loading="lazy"
-              />
+              {saas.image_url && (
+                <img
+                  src={saas.image_url}
+                  alt={saas.name}
+                  className="w-full rounded-sm"
+                  loading="lazy"
+                />
+              )}
             </div>
           </div>
 
           {/* Sidebar - Right Side */}
           <div className="lg:col-span-2">
             <div className="sticky top-24 space-y-6">
-              {/* Visit Live Page Button */}
+              {/* Visit Website Button */}
               <Button asChild size="lg" className="w-full">
-                <a href={page.page_url} target="_blank" rel="noopener noreferrer">
-                  Visit Live Page →
+                <a href={saas.url} target="_blank" rel="noopener noreferrer">
+                  Visit Website →
                 </a>
               </Button>
 
-              {/* Page Info Card */}
+              {/* SaaS Info Card */}
               <Card className="border-0 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]">
                 <CardContent className="space-y-6">
-                  {/* Page Info */}
+                  {/* SaaS Info */}
                   <div>
-                    <h1 className="text-2xl font-bold mb-3">{saas?.name || page.title}</h1>
+                    <h1 className="text-2xl font-bold mb-3">{saas.name}</h1>
                     <p className="text-muted-foreground text-sm">
-                      {page.description}
+                      {saas.description}
                     </p>
                   </div>
 
-                  {/* Page Type */}
+                  {/* Category */}
                   <div className="pt-4 border-t">
                     <div className="text-sm font-medium text-muted-foreground mb-2">
-                      Page Type
+                      Category
                     </div>
-                      <Badge variant="outline" className="capitalize">
-                        {page.page_type}
-                      </Badge>
+                    <Badge variant="outline">
+                      {saas.category}
+                    </Badge>
                   </div>
 
                   {/* Tags */}
-                  <div className="pt-4 border-t">
-                    <div className="text-sm font-medium text-muted-foreground mb-2">
-                      Tags
+                  {saas.tags && saas.tags.length > 0 && (
+                    <div className="pt-4 border-t">
+                      <div className="text-sm font-medium text-muted-foreground mb-2">
+                        Tags
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {saas.tags.map((tag: string) => (
+                          <Badge key={tag} variant="secondary">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                      {page.tags.map((tag: string) => (
-                        <Badge key={tag} variant="secondary">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
+                  )}
 
                   {/* Date */}
                   <div className="pt-4 border-t">
@@ -166,7 +147,7 @@ export default async function ShowcasePageDetail({ params }: PageProps) {
                       Date Added
                     </div>
                     <div className="text-sm">
-                      {new Date(page.created_at).toLocaleDateString('en-US', {
+                      {new Date(saas.created_at).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'
@@ -179,59 +160,49 @@ export default async function ShowcasePageDetail({ params }: PageProps) {
           </div>
         </div>
 
-        {/* Related Pages - Full Width */}
-        {relatedPages.length > 0 && (
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">
-              More from {saas?.name}
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {relatedPages.map((relatedPage: any) => (
-                <ShowcaseCard
-                  key={relatedPage.id}
-                  page={{
-                    id: relatedPage.id,
-                    saasId: relatedPage.saas_id,
-                    slug: relatedPage.slug,
-                    title: relatedPage.title,
-                    description: relatedPage.description,
-                    pageUrl: relatedPage.page_url,
-                    screenshotUrl: relatedPage.screenshot_url,
-                    pageType: relatedPage.page_type,
-                    tags: relatedPage.tags,
-                    createdAt: relatedPage.created_at,
-                  }}
-                  saasName={saas?.name}
-                />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Similar Pages - Full Width */}
-        {similarPages.length > 0 && (
+        {/* Similar SaaS - Full Width */}
+        {similarSaas.length > 0 && (
           <div>
             <h2 className="text-2xl font-bold mb-6">
-              Similar {page.page_type} Pages
+              Similar {saas.category} Products
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {similarPages.map((similarPage: any) => (
-                <ShowcaseCard
-                  key={similarPage.id}
-                  page={{
-                    id: similarPage.id,
-                    saasId: similarPage.saas_id,
-                    slug: similarPage.slug,
-                    title: similarPage.title,
-                    description: similarPage.description,
-                    pageUrl: similarPage.page_url,
-                    screenshotUrl: similarPage.screenshot_url,
-                    pageType: similarPage.page_type,
-                    tags: similarPage.tags,
-                    createdAt: similarPage.created_at,
-                  }}
-                  saasName={similarPage.saas_products?.name}
-                />
+              {similarSaas.map((similar: any) => (
+                <Link
+                  key={similar.id}
+                  href={`/pages/${similar.slug}`}
+                  className="block group"
+                >
+                  <div className="overflow-hidden rounded-sm">
+                    <div 
+                      className="relative overflow-hidden bg-muted"
+                      style={{ aspectRatio: '380/475' }}
+                    >
+                      {similar.image_url && (
+                        <img
+                          src={similar.image_url}
+                          alt={similar.name}
+                          className="w-full h-full object-cover object-top"
+                          loading="lazy"
+                        />
+                      )}
+                      
+                      <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        <div className="bg-white/90 backdrop-blur-sm rounded-sm p-2 shadow-lg">
+                          <svg className="size-4 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-3">
+                      <h3 className="text-sm font-medium text-foreground">
+                        {similar.name}
+                      </h3>
+                    </div>
+                  </div>
+                </Link>
               ))}
             </div>
           </div>
