@@ -152,7 +152,7 @@ export default async function ShowcasePageDetail({ params }: PageProps) {
                       Tags
                     </div>
                     <div className="flex flex-wrap gap-2">
-                      {page.tags.map((tag) => (
+                      {page.tags.map((tag: string) => (
                         <Badge key={tag} variant="secondary">
                           {tag}
                         </Badge>

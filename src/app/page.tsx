@@ -72,7 +72,7 @@ export default async function Home() {
           </p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {['AI/ML', 'Analytics', 'CRM', 'Developer Tools', 'E-commerce', 'Marketing', 'Productivity', 'Design', 'Communication', 'Finance'].map((category) => (
+          {['AI/ML', 'Analytics', 'CRM', 'Developer Tools', 'E-commerce', 'Marketing', 'Productivity', 'Design', 'Communication', 'Finance'].map((category: string) => (
             <Link
               key={category}
               href={`/categories/${category.toLowerCase().replace('/', '-')}`}

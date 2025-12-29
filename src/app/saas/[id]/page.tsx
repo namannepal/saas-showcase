@@ -126,7 +126,7 @@ export default async function SaaSDetailPage({ params }: PageProps) {
                         Tags
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {saas.tags.map((tag) => (
+                        {saas.tags.map((tag: string) => (
                           <Badge key={tag} variant="secondary">
                             {tag}
                           </Badge>

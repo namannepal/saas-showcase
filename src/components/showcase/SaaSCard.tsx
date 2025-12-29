@@ -35,7 +35,7 @@ export function SaaSCard({ saas }: SaaSCardProps) {
         <CardContent>
           <div className="flex flex-wrap gap-2">
             <Badge variant="outline">{saas.category}</Badge>
-            {saas.tags.slice(0, 2).map((tag) => (
+            {saas.tags.slice(0, 2).map((tag: string) => (
               <Badge key={tag} variant="secondary" className="text-xs">
                 {tag}
               </Badge>
