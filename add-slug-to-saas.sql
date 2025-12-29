@@ -39,15 +39,24 @@ DECLARE
   base_slug TEXT;
   final_slug TEXT;
   counter INTEGER := 1;
+  suffix TEXT := '';
 BEGIN
   IF NEW.slug IS NULL OR NEW.slug = '' THEN
+    -- Generate base slug from name
     base_slug := generate_slug(NEW.name);
-    final_slug := base_slug;
+    
+    -- Add page type suffix for comparison pages
+    IF NEW.page_type = 'comparison' THEN
+      suffix := '-comparison-page';
+    END IF;
+    
+    -- Combine base slug with suffix
+    final_slug := base_slug || suffix;
     
     -- Check for uniqueness and add counter if needed
     WHILE EXISTS (SELECT 1 FROM saas_products WHERE slug = final_slug AND id != COALESCE(NEW.id, '00000000-0000-0000-0000-000000000000'::uuid)) LOOP
       counter := counter + 1;
-      final_slug := base_slug || '-' || counter;
+      final_slug := base_slug || suffix || '-' || counter;
     END LOOP;
     
     NEW.slug := final_slug;

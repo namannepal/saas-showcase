@@ -32,8 +32,11 @@ export async function generateMetadata({ params }: PageProps) {
     };
   }
 
+  // Add page type suffix for comparison pages
+  const titleSuffix = saas.page_type === 'comparison' ? ' Comparison Page' : '';
+
   return {
-    title: `${saas.name} - SaaS Showcase`,
+    title: `${saas.name}${titleSuffix} - SaaS Showcase`,
     description: saas.description,
     alternates: {
       canonical: `${BASE_URL}/pages/${slug}`,
@@ -161,6 +164,9 @@ export default async function ShowcasePageDetail({ params }: PageProps) {
                           
                           // Remove "Variable" suffix (e.g., "interVariable" -> "inter")
                           name = name.replace(/Variable$/i, '');
+                          
+                          // Remove numeric font weights (e.g., "Lausanne 400" -> "Lausanne")
+                          name = name.replace(/\s+\d{3,4}$/g, '');
                           
                           // Remove font weight/style keywords
                           name = name

@@ -17,10 +17,11 @@ export const metadata: Metadata = {
 export const revalidate = 0; // Always fetch fresh data
 
 export default async function Home() {
-  // Fetch SaaS products from Supabase
+  // Fetch SaaS products from Supabase (only landing pages)
   const { data: saasProducts } = await supabase
     .from('saas_products')
     .select('*')
+    .eq('page_type', 'landing')
     .order('created_at', { ascending: false })
     .limit(12);
 
