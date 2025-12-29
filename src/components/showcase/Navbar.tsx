@@ -15,17 +15,6 @@ export function Navbar() {
               <span className="font-bold text-xl text-foreground">SaaS Showcase</span>
             </Link>
             
-            <div className="hidden md:flex items-center gap-6">
-              <Link href="/" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Home
-              </Link>
-              <Link href="/browse" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Browse
-              </Link>
-              <Link href="/categories" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Categories
-              </Link>
-            </div>
           </div>
 
           <div className="flex items-center gap-4">
@@ -36,9 +25,6 @@ export function Navbar() {
                 className="w-64"
               />
             </div>
-            <Button variant="outline" asChild>
-              <Link href="/submit">Submit SaaS</Link>
-            </Button>
           </div>
         </div>
       </div>

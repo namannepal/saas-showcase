@@ -33,6 +33,8 @@ const PAGE_TYPE_LABELS: Record<string, string> = {
 
 export const revalidate = 0; // Always fetch fresh data
 
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+
 export async function generateMetadata({ params }: PageProps) {
   const { pageType } = await params;
   const dbType = PAGE_TYPE_MAP[pageType];
@@ -46,6 +48,9 @@ export async function generateMetadata({ params }: PageProps) {
   return {
     title: `${label} - SaaS Showcase`,
     description: `Explore the best ${label.toLowerCase()} from leading SaaS companies`,
+    alternates: {
+      canonical: `${BASE_URL}/${pageType}`,
+    },
   };
 }
 

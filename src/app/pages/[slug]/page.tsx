@@ -16,6 +16,8 @@ interface PageProps {
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   const { data: saas } = await supabase
@@ -33,6 +35,9 @@ export async function generateMetadata({ params }: PageProps) {
   return {
     title: `${saas.name} - SaaS Showcase`,
     description: saas.description,
+    alternates: {
+      canonical: `${BASE_URL}/pages/${slug}`,
+    },
   };
 }
 
