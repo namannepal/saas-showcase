@@ -3,7 +3,7 @@ import { ShowcaseCard } from '@/components/showcase/ShowcaseCard';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 
-export const revalidate = 60; // Revalidate every 60 seconds
+export const revalidate = 0; // Always fetch fresh data
 
 export default async function Home() {
   // Fetch recent showcase pages from Supabase
