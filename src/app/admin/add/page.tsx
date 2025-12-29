@@ -24,6 +24,17 @@ const categories = [
   'Other',
 ];
 
+const pageTypes = [
+  { value: 'landing', label: 'Landing Page' },
+  { value: 'pricing', label: 'Pricing Page' },
+  { value: 'features', label: 'Features Page' },
+  { value: 'about', label: 'About Us Page' },
+  { value: 'blog', label: 'Blog Page' },
+  { value: 'testimonials', label: 'Testimonials Page' },
+  { value: 'faq', label: 'FAQ Page' },
+  { value: 'contact', label: 'Contact Us Page' },
+];
+
 export default function AddSaaSPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -32,6 +43,7 @@ export default function AddSaaSPage() {
     description: '',
     url: '',
     category: 'Productivity',
+    pageType: 'landing',
     tags: '',
     featured: false,
   });
@@ -51,6 +63,7 @@ export default function AddSaaSPage() {
           description: formData.description,
           url: formData.url,
           category: formData.category,
+          pageType: formData.pageType,
           tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
           featured: formData.featured,
         }),
@@ -158,6 +171,28 @@ export default function AddSaaSPage() {
                     </option>
                   ))}
                 </select>
+              </div>
+
+              {/* Page Type */}
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Page Type <span className="text-red-500">*</span>
+                </label>
+                <select
+                  className="w-full px-3 py-2 rounded-md border bg-background"
+                  value={formData.pageType}
+                  onChange={(e) => setFormData({ ...formData, pageType: e.target.value })}
+                  required
+                >
+                  {pageTypes.map((type) => (
+                    <option key={type.value} value={type.value}>
+                      {type.label}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-muted-foreground mt-1">
+                  What type of page is this? (Landing, Pricing, Features, etc.)
+                </p>
               </div>
 
               {/* Tags */}

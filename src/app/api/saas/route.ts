@@ -113,6 +113,7 @@ export async function POST(request: NextRequest) {
           url: body.url,
           image_url: imageUrl,
           category: body.category,
+          page_type: body.pageType || 'landing',
           tags: body.tags || [],
           featured: body.featured || false,
           metadata: metadata,

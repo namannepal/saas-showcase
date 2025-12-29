@@ -125,6 +125,16 @@ export default async function ShowcasePageDetail({ params }: PageProps) {
                     </Badge>
                   </div>
 
+                  {/* Page Type */}
+                  <div className="pt-4 border-t">
+                    <div className="text-sm font-medium text-muted-foreground mb-2">
+                      Page Type
+                    </div>
+                    <Badge variant="outline" className="capitalize">
+                      {saas.page_type?.replace('-', ' ') || 'Landing'} Page
+                    </Badge>
+                  </div>
+
                   {/* Tags */}
                   {saas.tags && saas.tags.length > 0 && (
                     <div className="pt-4 border-t">
