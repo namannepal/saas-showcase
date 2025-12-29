@@ -36,9 +36,6 @@ export function Navbar() {
                 className="w-64"
               />
             </div>
-            <Button variant="ghost" asChild>
-              <Link href="/admin">Admin</Link>
-            </Button>
             <Button variant="outline" asChild>
               <Link href="/submit">Submit SaaS</Link>
             </Button>

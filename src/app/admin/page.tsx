@@ -2,6 +2,7 @@ import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { LogoutButton } from '@/components/admin/LogoutButton';
 import Link from 'next/link';
 import { Trash2, Edit, Plus } from 'lucide-react';
 
@@ -31,12 +32,15 @@ export default async function AdminPage() {
               Manage your SaaS showcase products and pages
             </p>
           </div>
-          <Link href="/admin/add">
-            <Button size="lg">
-              <Plus className="mr-2 size-4" />
-              Add New SaaS
-            </Button>
-          </Link>
+          <div className="flex gap-3">
+            <LogoutButton />
+            <Link href="/admin/add">
+              <Button size="lg">
+                <Plus className="mr-2 size-4" />
+                Add New SaaS
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Stats */}
