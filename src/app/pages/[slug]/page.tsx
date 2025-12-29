@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ShowcaseCard } from '@/components/showcase/ShowcaseCard';
 import { ShareButtons } from '@/components/showcase/ShareButtons';
+import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
 interface PageProps {
@@ -68,11 +69,14 @@ export default async function ShowcasePageDetail({ params }: PageProps) {
             <Link href="/" className="hover:text-foreground transition-colors">
               Home
             </Link>
-            <span>/</span>
-            <span className="capitalize">
-              {saas.page_type?.replace('-', ' ') || 'Landing'} Pages
-            </span>
-            <span>/</span>
+            <ChevronRight className="size-4" />
+            <Link 
+              href={`/${saas.page_type || 'landing'}-pages`}
+              className="hover:text-foreground transition-colors capitalize"
+            >
+              {saas.page_type?.replace('-', ' ') || 'Landing'} Page
+            </Link>
+            <ChevronRight className="size-4" />
             <span className="text-foreground">{saas.name}</span>
           </nav>
         </div>
@@ -115,35 +119,56 @@ export default async function ShowcasePageDetail({ params }: PageProps) {
                     </p>
                   </div>
 
-                  {/* Category */}
-                  <div className="pt-4 border-t">
-                    <div className="text-sm font-medium text-muted-foreground mb-2">
-                      Category
-                    </div>
-                    <Badge variant="outline">
-                      {saas.category}
-                    </Badge>
-                  </div>
+                  {/* Divider */}
+                  <div className="pt-4 border-t" />
 
                   {/* Page Type */}
-                  <div className="pt-4 border-t">
-                    <div className="text-sm font-medium text-muted-foreground mb-2">
+                  <div className="flex justify-between items-center mb-3">
+                    <div className="text-sm text-muted-foreground">
                       Page Type
                     </div>
-                    <Badge variant="outline" className="capitalize">
+                    <div className="text-sm text-foreground/80 capitalize">
                       {saas.page_type?.replace('-', ' ') || 'Landing'} Page
-                    </Badge>
+                    </div>
                   </div>
+
+                  {/* Fonts */}
+                  {(() => {
+                    const fonts = saas.metadata?.fonts || [];
+                    const genericFonts = ['sans-serif', 'serif', 'monospace', 'cursive', 'fantasy', 'system-ui'];
+                    const uniqueFonts = [...new Set(
+                      fonts
+                        .map((f: any) => f.first)
+                        .filter((name: string) => !genericFonts.includes(name?.toLowerCase()))
+                        .map((name: string) => 
+                          name
+                            ?.replace(/\s+(trial|medium|variable|bold|regular|light|thin|black|heavy|extra|semibold|demi)\b/gi, '')
+                            .trim()
+                        )
+                        .filter(Boolean)
+                    )];
+                    
+                    return uniqueFonts.length > 0 ? (
+                      <div className="flex justify-between items-center mb-3">
+                        <div className="text-sm text-muted-foreground">
+                          Fonts
+                        </div>
+                        <div className="text-sm text-foreground/80 text-right">
+                          {uniqueFonts.join(', ')}
+                        </div>
+                      </div>
+                    ) : null;
+                  })()}
 
                   {/* Tags */}
                   {saas.tags && saas.tags.length > 0 && (
-                    <div className="pt-4 border-t">
-                      <div className="text-sm font-medium text-muted-foreground mb-2">
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="text-sm text-muted-foreground">
                         Tags
                       </div>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-1 justify-end max-w-[60%]">
                         {saas.tags.map((tag: string) => (
-                          <Badge key={tag} variant="secondary">
+                          <Badge key={tag} variant="secondary" className="text-xs">
                             {tag}
                           </Badge>
                         ))}
@@ -152,15 +177,15 @@ export default async function ShowcasePageDetail({ params }: PageProps) {
                   )}
 
                   {/* Date */}
-                  <div className="pt-4 border-t">
-                    <div className="text-sm font-medium text-muted-foreground mb-2">
-                      Date Added
+                  <div className="flex justify-between items-center">
+                    <div className="text-sm text-muted-foreground">
+                      Added On
                     </div>
-                    <div className="text-sm">
+                    <div className="text-sm text-foreground/80">
                       {new Date(saas.created_at).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
                       })}
                     </div>
                   </div>
