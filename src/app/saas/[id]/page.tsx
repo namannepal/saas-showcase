@@ -173,6 +173,7 @@ export default async function SaaSDetailPage({ params }: PageProps) {
                   page={{
                     id: page.id,
                     saasId: page.saas_id,
+                    slug: page.slug,
                     title: page.title,
                     description: page.description,
                     pageUrl: page.page_url,
