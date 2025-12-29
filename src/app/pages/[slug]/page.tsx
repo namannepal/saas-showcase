@@ -69,9 +69,9 @@ export default async function ShowcasePageDetail({ params }: PageProps) {
               Home
             </Link>
             <span>/</span>
-            <Link href="/browse" className="hover:text-foreground transition-colors">
-              Browse
-            </Link>
+            <span className="capitalize">
+              {saas.page_type?.replace('-', ' ') || 'Landing'} Pages
+            </span>
             <span>/</span>
             <span className="text-foreground">{saas.name}</span>
           </nav>
