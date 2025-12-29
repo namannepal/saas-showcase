@@ -1,0 +1,5 @@
+The placeholder images referenced in sampleData.ts don't exist yet.
+You can either:
+1. Add real screenshots using the API
+2. Replace these with actual placeholder images
+3. Update the sample data to use the Hera screenshot for all items temporarily
