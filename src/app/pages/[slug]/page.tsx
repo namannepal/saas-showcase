@@ -189,6 +189,11 @@ export default async function ShowcasePageDetail({ params }: PageProps) {
                           // Fix common font name spacing for camelCase: "InterBold" -> "Inter Bold"
                           name = name.replace(/([a-z])([A-Z])/g, '$1 $2');
                           
+                          // Special case: "Tiemposheadline" -> "Tiempos Headline"
+                          if (name.toLowerCase() === 'tiemposheadline') {
+                            name = 'Tiempos Headline';
+                          }
+                          
                           // Remove font weight/style keywords
                           name = name
                             .replace(/\s+(trial|medium|bold|regular|light|thin|black|heavy|extra|semibold|demi)\b/gi, '')
@@ -219,7 +224,7 @@ export default async function ShowcasePageDetail({ params }: PageProps) {
                           Fonts
                         </div>
                         <div className="text-sm text-foreground/80 text-right">
-                          {uniqueFonts.join(', ')}
+                          {uniqueFonts.slice(0, 2).join(', ')}
                         </div>
                       </div>
                     ) : null;
