@@ -111,7 +111,11 @@ export default async function ShowcasePageDetail({ params }: PageProps) {
             <div className="sticky top-24 space-y-6">
               {/* Visit Website Button */}
               <Button asChild size="lg" className="w-full">
-                <a href={saas.url} target="_blank" rel="noopener noreferrer">
+                <a 
+                  href={`${saas.url}${saas.url.includes('?') ? '&' : '?'}utm_source=saasshowcase.com`}
+                  target="_blank" 
+                  rel="nofollow noreferrer noopener"
+                >
                   Visit Website →
                 </a>
               </Button>

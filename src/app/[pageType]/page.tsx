@@ -105,10 +105,10 @@ export default async function PageTypePage({ params }: PageProps) {
                 href={`/pages/${page.slug}`}
                 className="block group"
               >
-                <div className="overflow-hidden rounded-sm">
+                <div>
                   {/* Image */}
                   <div 
-                    className="relative overflow-hidden bg-muted"
+                    className="relative overflow-hidden bg-muted rounded-sm"
                     style={{ aspectRatio: '380/475' }}
                   >
                     {page.image_url && (

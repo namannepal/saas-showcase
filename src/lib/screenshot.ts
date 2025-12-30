@@ -11,12 +11,13 @@ export interface ScreenshotOptions {
   fullPage?: boolean;
   viewportWidth?: number;
   viewportHeight?: number;
-  format?: 'png' | 'jpg' | 'webp';
+  format?: 'webp' | 'png' | 'jpg';
   quality?: number;
   blockAds?: boolean;
   blockCookieBanners?: boolean;
   blockBannersByHeuristics?: boolean;
   blockTrackers?: boolean;
+  blockChats?: boolean;
   delay?: number;
   timeout?: number;
 }
@@ -34,12 +35,13 @@ export async function generateScreenshotUrl(
     fullPage = true,
     viewportWidth = 1920,
     viewportHeight = 1080,
-    format = 'jpg',
-    quality = 80,
+    format = 'webp',
+    quality = 95,
     blockAds = true,
     blockCookieBanners = true,
-    blockBannersByHeuristics = false,
+    blockBannersByHeuristics = true,
     blockTrackers = true,
+    blockChats = true,
     delay = 0,
     timeout = 60,
   } = options;
@@ -55,6 +57,7 @@ export async function generateScreenshotUrl(
     .blockCookieBanners(blockCookieBanners)
     .blockBannersByHeuristics(blockBannersByHeuristics)
     .blockTrackers(blockTrackers)
+    .blockChats(blockChats)
     .delay(delay)
     .timeout(timeout)
     .metadataFonts(true);
@@ -78,12 +81,13 @@ export async function takeScreenshot(
     fullPage = true,
     viewportWidth = 1920,
     viewportHeight = 1080,
-    format = 'jpg',
-    quality = 80,
+    format = 'webp',
+    quality = 95,
     blockAds = true,
     blockCookieBanners = true,
-    blockBannersByHeuristics = false,
+    blockBannersByHeuristics = true,
     blockTrackers = true,
+    blockChats = true,
     delay = 0,
     timeout = 60,
   } = options;
@@ -99,6 +103,7 @@ export async function takeScreenshot(
     .blockCookieBanners(blockCookieBanners)
     .blockBannersByHeuristics(blockBannersByHeuristics)
     .blockTrackers(blockTrackers)
+    .blockChats(blockChats)
     .delay(delay)
     .timeout(timeout)
     .metadataFonts(true);

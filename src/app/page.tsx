@@ -47,10 +47,10 @@ export default async function Home() {
                 href={`/pages/${saas.slug}`}
                 className="block group"
               >
-                <div className="overflow-hidden rounded-sm">
+                <div>
                   {/* Image - 380x475px aspect ratio */}
                   <div 
-                    className="relative overflow-hidden bg-muted"
+                    className="relative overflow-hidden bg-muted rounded-sm"
                     style={{ aspectRatio: '380/475' }}
                   >
                     {saas.image_url && (
