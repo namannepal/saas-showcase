@@ -82,6 +82,8 @@ export async function POST(request: NextRequest) {
       try {
         // Download screenshot and upload to Cloudinary
         const result = await downloadAndSaveScreenshot(body.pageUrl, {
+          name: body.title || 'untitled',
+          pageType: body.pageType || 'landing',
           fullPage: true,
           viewportWidth: 1920,
           viewportHeight: 1080,
@@ -175,6 +177,8 @@ export async function PUT(request: NextRequest) {
     if (body.recaptureScreenshot && isScreenshotConfigured()) {
       try {
         const result = await downloadAndSaveScreenshot(body.pageUrl || body.currentPageUrl, {
+          name: body.title || 'untitled',
+          pageType: body.pageType || 'landing',
           fullPage: true,
           viewportWidth: 1920,
           viewportHeight: 1080,

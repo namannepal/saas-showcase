@@ -2,34 +2,53 @@ import { generateScreenshotUrl } from './screenshot';
 import { uploadToCloudinary } from './cloudinary';
 
 /**
- * Generate a safe public ID from a URL for Cloudinary
+ * Generate a safe public ID from name and page type for Cloudinary
+ * @param name The SaaS product name
+ * @param pageType The page type (landing, pricing, etc.)
+ * @returns Safe public ID string
+ */
+function generatePublicId(name: string, pageType: string): string {
+  // Sanitize name - remove special characters
+  const sanitizedName = name
+    .replace(/[^a-zA-Z0-9\s]/g, '')
+    .replace(/\s+/g, '-')
+    .toLowerCase()
+    .substring(0, 50); // Limit length
+
+  // Format: name-pageType-page (e.g., "stripe-pricing-page")
+  const publicId = `${sanitizedName}-${pageType}-page`;
+  
+  return publicId;
+}
+
+/**
+ * Fallback: Generate a safe public ID from URL (for backward compatibility)
  * @param url The URL to convert to public ID
  * @returns Safe public ID string
  */
-function generatePublicId(url: string): string {
-  // Remove protocol and special characters
+function generatePublicIdFromUrl(url: string): string {
   const sanitized = url
     .replace(/^https?:\/\//, '')
     .replace(/[^a-zA-Z0-9]/g, '-')
     .replace(/-+/g, '-')
     .toLowerCase()
-    .substring(0, 100); // Limit length
+    .substring(0, 100);
 
-  // Add timestamp to ensure uniqueness
   const timestamp = Date.now();
-  
   return `${sanitized}-${timestamp}`;
 }
 
 /**
  * Download screenshot from ScreenshotOne and upload to Cloudinary
  * @param url The website URL to screenshot
- * @param options Optional screenshot options
+ * @param options Optional screenshot options including name and pageType for filename
  * @returns Object with Cloudinary URL and metadata
  */
 export async function downloadAndSaveScreenshot(
   url: string,
   options?: {
+    name?: string;
+    pageType?: string;
     fullPage?: boolean;
     viewportWidth?: number;
     viewportHeight?: number;
@@ -65,7 +84,11 @@ export async function downloadAndSaveScreenshot(
     const imageBuffer = Buffer.from(await response.arrayBuffer());
 
     // Upload to Cloudinary
-    const publicId = generatePublicId(url);
+    // Use name and pageType if provided, otherwise fallback to URL-based ID
+    const publicId = options?.name && options?.pageType 
+      ? generatePublicId(options.name, options.pageType)
+      : generatePublicIdFromUrl(url);
+    
     const cloudinaryResult = await uploadToCloudinary(imageBuffer, {
       folder: 'saas-showcase',
       publicId,
