@@ -147,7 +147,12 @@ export default async function ShowcasePageDetail({ params }: PageProps) {
                   {/* Fonts */}
                   {(() => {
                     const fonts = saas.metadata?.fonts || [];
-                    const genericFonts = ['sans-serif', 'serif', 'monospace', 'cursive', 'fantasy', 'system-ui', 'ui-monospace'];
+                    const genericFonts = [
+                      'sans-serif', 'serif', 'monospace', 'cursive', 'fantasy', 
+                      'system-ui', 'ui-monospace', '-apple-system', 'blinkmacSystemFont',
+                      'segoe ui', 'roboto', 'oxygen', 'ubuntu', 'cantarell', 
+                      'helvetica neue', 'helvetica', 'arial'
+                    ];
                     const uniqueFonts = [...new Set(
                       fonts
                         .map((f: any) => f.first)
