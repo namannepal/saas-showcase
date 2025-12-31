@@ -48,3 +48,4 @@ FROM saas_products
 WHERE page_type = 'comparison'
 ORDER BY created_at DESC;
 
+

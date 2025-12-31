@@ -15,3 +15,4 @@ SELECT conname, pg_get_constraintdef(oid)
 FROM pg_constraint 
 WHERE conname = 'saas_products_page_type_check';
 
+

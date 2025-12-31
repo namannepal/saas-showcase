@@ -47,8 +47,20 @@ export async function generateMetadata({ params }: PageProps) {
 
   const label = PAGE_TYPE_LABELS[dbType];
   
+  // Get count of pages for this type
+  const { count } = await supabase
+    .from('saas_products')
+    .select('*', { count: 'exact', head: true })
+    .eq('page_type', dbType);
+  
+  const pageCount = count || 0;
+  
+  // Format: "12 Best SaaS Comparison Page Examples - SaaS Showcase"
+  // Remove the trailing "s" from label for singular "Page"
+  const pageTypeLabel = label.replace(/\sPages$/, ' Page');
+  
   return {
-    title: `${label} - SaaS Showcase`,
+    title: `${pageCount} Best SaaS ${pageTypeLabel} Examples - SaaS Showcase`,
     description: `Explore the best ${label.toLowerCase()} from leading SaaS companies`,
     alternates: {
       canonical: `${BASE_URL}/${pageType}`,
