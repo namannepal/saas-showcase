@@ -77,6 +77,7 @@ export function getOptimizedUrl(
     height?: number;
     quality?: string;
     format?: string;
+    crop?: string;
   } = {}
 ): string {
   if (!url.includes('cloudinary.com')) {
@@ -84,14 +85,34 @@ export function getOptimizedUrl(
   }
 
   const params = [];
+  
+  // Add width and height if provided
   if (options.width) params.push(`w_${options.width}`);
   if (options.height) params.push(`h_${options.height}`);
-  if (options.quality) params.push(`q_${options.quality}`);
-  if (options.format) params.push(`f_${options.format}`);
-
-  if (params.length === 0) {
-    params.push('q_auto', 'f_auto');
+  
+  // Add crop mode (default to scale to fit within dimensions)
+  if (options.crop) {
+    params.push(`c_${options.crop}`);
+  } else if (options.width || options.height) {
+    params.push('c_limit'); // Prevent upscaling
   }
+  
+  // Add quality (default to auto if not provided)
+  if (options.quality) {
+    params.push(`q_${options.quality}`);
+  } else {
+    params.push('q_auto:good');
+  }
+  
+  // Add format (default to auto/webp if not provided)
+  if (options.format) {
+    params.push(`f_${options.format}`);
+  } else {
+    params.push('f_auto');
+  }
+  
+  // Add DPR auto for responsive images
+  params.push('dpr_auto');
 
   const transformation = params.join(',');
   return url.replace('/upload/', `/upload/${transformation}/`);

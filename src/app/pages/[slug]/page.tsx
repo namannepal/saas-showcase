@@ -7,6 +7,8 @@ import { ShowcaseCard } from '@/components/showcase/ShowcaseCard';
 import { ShareButtons } from '@/components/showcase/ShareButtons';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
+import { getOptimizedUrl } from '@/lib/cloudinary';
 
 interface PageProps {
   params: Promise<{
@@ -94,13 +96,21 @@ export default async function ShowcasePageDetail({ params }: PageProps) {
           {/* Main Content - Left Side */}
           <div className="lg:col-span-5">
             {/* Screenshot */}
-            <div>
+            <div className="relative">
               {saas.image_url && (
-                <img
-                  src={saas.image_url}
+                <Image
+                  src={getOptimizedUrl(saas.image_url, {
+                    width: 1400,
+                    format: 'webp',
+                    quality: 'auto',
+                  })}
                   alt={saas.name}
+                  width={1400}
+                  height={1750}
                   className="w-full rounded-sm"
                   loading="lazy"
+                  sizes="(max-width: 1024px) 100vw, 70vw"
+                  priority={false}
                 />
               )}
             </div>

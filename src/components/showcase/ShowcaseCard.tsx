@@ -1,6 +1,8 @@
 import { ShowcasePage } from '@/types';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ExternalLink } from 'lucide-react';
+import { getOptimizedUrl } from '@/lib/cloudinary';
 
 interface ShowcaseCardProps {
   page: ShowcasePage;
@@ -8,6 +10,13 @@ interface ShowcaseCardProps {
 }
 
 export function ShowcaseCard({ page, saasName }: ShowcaseCardProps) {
+  // Optimize image for card size (380x475)
+  const optimizedUrl = getOptimizedUrl(page.screenshotUrl, {
+    width: 760, // 2x for retina displays
+    format: 'webp',
+    quality: 'auto',
+  });
+
   return (
     <Link href={`/pages/${page.slug}`} className="block group">
       <div className="overflow-hidden rounded-sm">
@@ -16,11 +25,14 @@ export function ShowcaseCard({ page, saasName }: ShowcaseCardProps) {
           className="relative overflow-hidden bg-muted"
           style={{ aspectRatio: '380/475' }}
         >
-          <img
-            src={page.screenshotUrl}
+          <Image
+            src={optimizedUrl}
             alt={page.title}
+            width={760}
+            height={950}
             className="w-full h-full object-cover object-top"
             loading="lazy"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
           
           {/* Link icon on hover - top right */}

@@ -1,7 +1,9 @@
 import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ChevronRight } from 'lucide-react';
+import { getOptimizedUrl } from '@/lib/cloudinary';
 
 interface PageProps {
   params: Promise<{
@@ -124,11 +126,18 @@ export default async function PageTypePage({ params }: PageProps) {
                     style={{ aspectRatio: '380/475' }}
                   >
                     {page.image_url && (
-                      <img
-                        src={page.image_url}
+                      <Image
+                        src={getOptimizedUrl(page.image_url, {
+                          width: 760,
+                          format: 'webp',
+                          quality: 'auto',
+                        })}
                         alt={page.name}
+                        width={760}
+                        height={950}
                         className="w-full h-full object-cover object-top"
                         loading="lazy"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       />
                     )}
                     
