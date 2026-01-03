@@ -112,7 +112,7 @@ export async function takeScreenshot(
     .metadataFonts(true);
 
   // Generate a signed URL (doesn't require actual screenshot capture)
-  const signedUrl = client.generateSignedTakeURL(screenshotOptions);
+  const signedUrl = await client.generateSignedTakeURL(screenshotOptions);
 
   // For metadata, we'll fetch it separately or return empty arrays
   // ScreenshotOne metadata is extracted from the actual screenshot
