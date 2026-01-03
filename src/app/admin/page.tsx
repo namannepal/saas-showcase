@@ -36,6 +36,11 @@ export default async function AdminPage() {
           </div>
           <div className="flex gap-3">
             <LogoutButton />
+            <Link href="/admin/bulk-screenshot">
+              <Button size="lg" variant="outline">
+                Bulk Screenshot
+              </Button>
+            </Link>
             <Link href="/admin/add">
               <Button size="lg">
                 <Plus className="mr-2 size-4" />

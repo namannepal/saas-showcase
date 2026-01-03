@@ -34,6 +34,7 @@ const pageTypes = [
   { value: 'faq', label: 'FAQ Page' },
   { value: 'contact', label: 'Contact Us Page' },
   { value: 'comparison', label: 'Comparison Page' },
+  { value: 'resource', label: 'Resource Page' },
 ];
 
 interface PageProps {
@@ -46,6 +47,7 @@ function EditForm({ params }: PageProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [fetchingData, setFetchingData] = useState(true);
+  const [capturingScreenshot, setCapturingScreenshot] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -117,6 +119,36 @@ function EditForm({ params }: PageProps) {
       alert('Failed to update SaaS. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCaptureScreenshot = async () => {
+    if (!confirm('This will capture a new screenshot. The process may take 10-20 seconds. Continue?')) {
+      return;
+    }
+
+    setCapturingScreenshot(true);
+
+    try {
+      const { id } = await params;
+      
+      const response = await fetch(`/api/saas/${id}/screenshot`, {
+        method: 'POST',
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert('Screenshot captured successfully!');
+        router.refresh();
+      } else {
+        alert(`Error: ${result.error || 'Failed to capture screenshot'}`);
+      }
+    } catch (error) {
+      console.error('Error capturing screenshot:', error);
+      alert('Failed to capture screenshot. Please try again.');
+    } finally {
+      setCapturingScreenshot(false);
     }
   };
 
@@ -258,6 +290,38 @@ function EditForm({ params }: PageProps) {
                   Mark as featured
                 </label>
               </div>
+
+              {/* Divider */}
+              <div className="border-t pt-6" />
+
+              {/* Screenshot Capture */}
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Screenshot
+                </label>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleCaptureScreenshot}
+                  disabled={capturingScreenshot || loading}
+                  className="w-full"
+                >
+                  {capturingScreenshot ? (
+                    <>
+                      <Loader2 className="mr-2 size-4 animate-spin" />
+                      Capturing Screenshot...
+                    </>
+                  ) : (
+                    'Capture Screenshot'
+                  )}
+                </Button>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Click to capture a new screenshot of the URL. This may take 10-20 seconds.
+                </p>
+              </div>
+
+              {/* Divider */}
+              <div className="border-t pt-6" />
 
               {/* Submit */}
               <div className="flex gap-4">

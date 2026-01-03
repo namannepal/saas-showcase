@@ -34,8 +34,13 @@ export async function generateMetadata({ params }: PageProps) {
     };
   }
 
-  // Add page type suffix for comparison pages
-  const titleSuffix = saas.page_type === 'comparison' ? ' Comparison Page' : '';
+  // Add page type suffix for comparison and resource pages
+  let titleSuffix = '';
+  if (saas.page_type === 'comparison') {
+    titleSuffix = ' Comparison Page';
+  } else if (saas.page_type === 'resource') {
+    titleSuffix = ' Resource Page';
+  }
 
   return {
     title: `${saas.name}${titleSuffix} - SaaS Showcase`,
