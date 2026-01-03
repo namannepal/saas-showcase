@@ -34,12 +34,14 @@ export async function generateMetadata({ params }: PageProps) {
     };
   }
 
-  // Add page type suffix for comparison and resource pages
+  // Add page type suffix for comparison, resource, and demo pages
   let titleSuffix = '';
   if (saas.page_type === 'comparison') {
     titleSuffix = ' Comparison Page';
   } else if (saas.page_type === 'resource') {
     titleSuffix = ' Resource Page';
+  } else if (saas.page_type === 'demo') {
+    titleSuffix = ' Demo Page';
   }
 
   return {

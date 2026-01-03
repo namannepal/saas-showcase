@@ -11,6 +11,7 @@ const pageTypes = [
   { label: 'FAQ Pages', href: '/faq-pages' },
   { label: 'Contact Us Pages', href: '/contact-pages' },
   { label: 'Resource Pages', href: '/resource-pages' },
+  { label: 'Demo Pages', href: '/demo-pages' },
 ];
 
 export function Footer() {

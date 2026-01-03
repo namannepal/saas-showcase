@@ -35,6 +35,7 @@ const pageTypes = [
   { value: 'contact', label: 'Contact Us Page' },
   { value: 'comparison', label: 'Comparison Page' },
   { value: 'resource', label: 'Resource Page' },
+  { value: 'demo', label: 'Demo Page' },
 ];
 
 export default function AddSaaSPage() {

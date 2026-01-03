@@ -145,6 +145,7 @@ export default function BulkScreenshotPage() {
                     <option value="contact">Contact Us Page</option>
                     <option value="comparison">Comparison Page</option>
                     <option value="resource">Resource Page</option>
+                    <option value="demo">Demo Page</option>
                   </select>
                 </div>
 
