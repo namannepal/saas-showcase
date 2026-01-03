@@ -109,8 +109,7 @@ export async function takeScreenshot(
     .blockChats(blockChats)
     .delay(delay)
     .timeout(timeout)
-    .metadataFonts(true)
-    .metadataColors(true);
+    .metadataFonts(true);
 
   // Generate a signed URL (doesn't require actual screenshot capture)
   const signedUrl = client.generateSignedTakeURL(screenshotOptions);
